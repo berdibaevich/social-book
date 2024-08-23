@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+<h3 class="mt-3 font-monospace">
+    Are you sure close this discussion Room?
+</h3>
+<form action="" method="post">
+    {% csrf_token %}
+    <p class="text-danger font-monospace">CLose {{ room.book.name }} room.</p>
+    <button type="submit" class="btn btn-outline-danger">Close</button>
+    <a class="btn btn-outline-success ms-3" href="{% url 'chat:room' room.book.name %}">Cancel</a>
+</form>
+
+
+{% endblock content %}

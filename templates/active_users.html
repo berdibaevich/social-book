@@ -1,0 +1,12 @@
+<div class="card p-2">
+    <p class="text-center active_users">Active users</p>
+    {% for active in active_users %}
+    <a href="{% url 'myaccount:my-account' active.pk%}" class="profile mb-3">
+        <img src="{{ active.profile_img.url}}" class="book_of_owner_image" alt="{{ active.username}}">
+        <span>@{{ active.username}}</span>
+    </a>
+            
+    {% endfor %}
+
+
+</div>

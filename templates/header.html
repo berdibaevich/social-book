@@ -1,0 +1,153 @@
+
+
+<!-- Media screens -->
+
+<div class=" d-flex p-3 bg-white border-bottom shadow  px-md-4">
+
+    <div class="d-none d-md-flex flex-row my-auto flex-grow-1 align-items-center">
+        <h5 class="justify-content-center">
+            <a href="{% url 'home'%}" class="text-dark p-2">My Social <span class="text-warning">Book</span><i class="mx-2 fa-solid fa-book text-info fs-3"></i></a>
+        </h5>
+        <!-- Column2 -->
+        <form action="{% url 'search'%}" method="get" class="justify-content-center mx-3">
+            <input type="text" class="form-control" name="q" placeholder="Search Book....">
+        </form>
+        <!-- Column3 -->
+        <!-- Notifications process -->
+        {% if request.user.is_authenticated %}
+        <div class="d-flex ms-5 flex-row-reverse flex-grow-2">
+          
+          <a class=" position-relative" href="{% url 'notification:notification-view' request.user.pk%}">
+            <i class="fa-regular fa-bell fs-3"></i>
+            <span class="position-absolute top-0 ms-1 start-100 translate-middle badge rounded-pill bg-danger">
+              {% if noti %}
+                {{ how_may }}
+              {% else %}
+              0
+              {% endif %}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+        </div>
+        {% else %}
+        <div class="d-flex ms-5 flex-row-reverse flex-grow-2">
+          
+          <a class=" position-relative" href="">
+            <i class="fa-regular fa-bell fs-3"></i>
+            <span class="position-absolute top-0 ms-1 start-100 translate-middle badge rounded-pill bg-danger">
+              0
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+        </div>
+        {% endif %}
+        <!-- / notification -->
+
+
+        <div class="d-flex flex-row-reverse flex-grow-1 me-4">
+          
+            {% if request.user.is_authenticated %}
+            <div class="dropdown">
+                <button class="rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if request.user.profile_img %}
+                    <img src="{{ request.user.profile_img.url }}" width="60" height="60" style="border-radius: 50%;" alt="{{ request.user.username }}">
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li>
+                    <a href="{% url 'myaccount:my-account' request.user.pk %}" class="dropdown-item active p-2">My Account</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'account:logout'%}" class="dropdown-item">Logout</a>
+                  </li>
+                </ul>
+            </div>
+            {% else %}
+
+            <div class="dropdown me-4">
+              <button class="btn btn-warning rounded-circle fs-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user "></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item active" href="{% url 'account:login' %}">Login</a></li>
+                <li><a class="dropdown-item" href="{% url 'account:register' %}">Dizimnen o'tiw</a></li>               
+              </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- small screen -->
+
+    <div class="d-flex d-md-none flex-column mx-auto align-items-center">
+        <h5 class="font-weight-normal mb-sm-3 ">
+            <a href="{% url 'home'%}" class="text-dark p-2">My Social <span class="text-warning">Book</span><i class="mx-2 fa-solid fa-book text-info fs-3"></i></a>
+        </h5>
+        <!-- column2 -->
+        <div class="col-sm-10 d-flex">
+          <form action="{% url 'search' %}" class="justify-content-center" >
+            <input type="text" class="form-control" name="q" placeholder="Search..." id="id_search_small">
+        </form>
+
+        <!-- Notifications process -->
+      <div class="ms-4">
+            {% if request.user.is_authenticated %}
+              <a class="position-relative" href="{% url 'notification:notification-view' request.user.pk%}">
+                <i class="fa-regular fa-bell fs-3"></i>
+                <span class="position-absolute top-0 ms-1 start-100 translate-middle badge rounded-pill bg-danger">
+                  {% if noti %}
+                    {{ how_may }}
+                  {% else %}
+                  0
+                  {% endif %}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </a>
+            {% else %}
+
+              <a class="position-relative" href="">
+                <i class="fa-regular fa-bell fs-3"></i>
+                <span class="position-absolute top-0 ms-1 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </a>
+          
+            {% endif %}
+            <!-- / notification -->
+            </div>
+      </div>
+
+
+
+        <div class="d-flex flex-column mt-4">
+            {% if request.user.is_authenticated %}
+
+            <div class="dropdown">
+                <button class="rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ request.user.profile_img.url }}" width="60" height="60" style="border-radius: 50%;" alt="">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li>
+                    <a href="{% url 'myaccount:my-account' request.user.pk %}" class="dropdown-item active p-2">My Account</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'account:logout'%}" class="dropdown-item">Logout</a>
+                  </li>
+                </ul>
+              </div>
+
+            {% else %}
+            <a href="{% url 'account:login'%}" class="p-2 btn btn-outline-success mb-3">Login</a>
+            <a href="{% url 'account:register'%}" class="btn btn-outline-primary">Dizimnen otiw</a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+

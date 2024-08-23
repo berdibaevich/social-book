@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<style>
+    .book_image{
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid skyblue;
+    }
+
+    .user_profile_image{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .user_username{
+        font-size: 13px;
+        font-weight: 700;
+        color: #007185;
+    }
+    .text_time{
+        font-size: 12px;
+        font-weight: 700;
+        color: #007185;
+    }
+    .text_text{
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .bordergo{
+        padding: 10px;
+        border-radius: 16px;
+        background-color: antiquewhite;
+       
+    }
+    .borderyea{
+        max-height: 300px;
+        overflow: auto;
+    }
+    .box{
+        margin-top: 100px;
+    }
+    
+</style>
+
+
+
+<div class="row mt-3 ">
+    <div class="col-sm-4 text-center">
+        <img class="book_image" src="{{ room.book.image.url}}" alt="{{ room.book.name }}">
+        <p class="font-monospace">{{ room.book.name}}</p>
+        {% if request.user == room.owner %}
+            <a href="{% url 'chat:close' room.book.name %}" class="btn btn-outline-primary mb-3">Close Chat room</a>
+        {% endif %}
+        {% for user in room.discussion_users.all %}
+                <div class="d-flex mb-2">
+                    <img class="user_profile_image" src="{{ user.profile_img.url }}" alt="{{ user.username }}">
+                    <p class="user_username font-monospace">@{{user.username}}</p>
+                </div>
+        {% endfor %}
+
+    </div>
+    <div class="col-md-8">
+        <div class="">
+            <div class="borderyea">
+                {% for text in texts %}
+                <p class="bordergo">
+                    <img class="user_profile_image" src="{{ text.user.profile_img.url }}" alt="{{ text.user.username }}">
+                    <span class="text_text">{{ text.text}}</span>
+                    <span class="text_time">{{ text.created|timesince}} ago</span>
+                </p>
+                {% endfor %}
+            </div>
+            <form action="" method="post">
+                {% csrf_token %}
+                <textarea name="text" class="form-control" placeholder="Type something ..." id="" cols="50" rows="3"></textarea>
+                <button type="submit" class="btn btn-dark mt-2">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="box"></div>
+
+
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+<style>
+    .give_margin{
+        margin-top: 100px;
+    }
+</style>
+
+<div class="mt-3 row justify-content-center">
+    <div class="col-md-10 col-sm-10 card p-3 shadow">
+        <form action="" method="post">
+            {% csrf_token %}
+                {{ form.as_p }}
+            <button class="btn btn-success" type="submit">Saqlaw</button>
+            <a href="{% url 'myaccount:my-account' request.user.pk%}" class="ms-5 btn btn-danger">Cancel</a>
+        </form>
+    </div>
+</div>
+
+
+<div class="give_margin"></div>
+
+{% endblock content %}

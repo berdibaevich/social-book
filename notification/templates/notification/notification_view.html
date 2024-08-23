@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+<style>
+    .sender_image{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    .message_text_noti{
+        color: #565959;
+        font-size: 20px;
+        font-weight: 400;
+
+    }
+    .sender_profile{
+        margin-right: 20px;
+        
+    }
+    .profile_user{
+        font-weight: 700;
+        color: #007185;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .hidden{
+        display: none;
+    }
+    .noti_message{
+        color: #0f1111;
+        font-weight: 700;
+        size: 14px;
+    }
+
+    .book_image{
+        width: 100px;
+        border-radius: 12px;
+    }
+</style>
+
+    <div class="row mt-4 justify-content-center">
+        <div class="card p-2 shadow col-md-10 col-sm-12">
+
+            {% for noti in notifications %}
+                <!-- follow message  -->
+                {% if noti.notification_types == 3%}
+
+                <h3 class="text-center">Hi  {{ noti.receiver|title }}</h3>
+                
+                <div class="d-flex justify-content-between">
+                    <div class="sender_profile text-center">
+                        <a href="{% url 'myaccount:my-account' noti.sender.pk%}">
+                            <img class="sender_image" src="{{ noti.sender.profile_img.url}}" alt="{{ noti.sender}}">
+                            <small class="lead">@{{ noti.sender.username}}</small>
+                        </a>
+                        <div class="mt-4" id="add-hidden">
+                            <i id="accept" data-pk="{{ noti.sender.pk}}" class="fa-solid fa-check fs-3 me-4 text-success"></i>
+                            <input type="hidden" id="input" name="receiver" value="{{ noti.receiver }}">
+                            <input type="hidden" id="input2" name="sender" value="{{ noti.sender }}">
+                            <i id="cancel" class="fa-solid fa-x fs-3 text-danger"></i>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <p class="lead">{{ noti.message_text}}</p>
+                        <small>{{ noti.updated|timesince}} ago</small>
+                    </div>
+                </div>
+                <hr>
+                {% endif %}
+                <!-- follow message  -->
+                <!-- Like message  -->
+                {% if noti.notification_types == 1 %}
+
+                <h3 class="text-center">Hi  {{ noti.receiver|title }}</h3>
+                
+                        <div class="row mt-3 justify-content-center">
+                            <div class="sender_profile text-center col-md-5 col-sm-12">
+                                <a href="{% url 'myaccount:my-account' noti.sender.pk%}" class="profile_user">
+                                    <img class="sender_image" src="{{ noti.sender.profile_img.url}}" alt="{{ noti.sender}}">
+                                    <small class="lead">@{{ noti.sender.username}}</small>
+                                </a>
+                                <p class="message_text_noti">{{ noti.message_text}}</p>
+                            </div>
+                            <div class="message col-md-5 col-sm-12 ">
+                                <div class="text-center">
+                                    {% if noti.book.image %}
+                                    <img class="book_image" src="{{ noti.book.image.url }}" alt="{{ noti.book.name}}">
+                                    {% endif %}
+                                </div>
+                                <p class="noti_message text-center">"{{ noti.book.name }}" kitabin'izg'a unamli tu'rde kitabin'iz unadi malades keep it up.Bul bizge Motivatsiya boladi</p>
+                                <small class="ms-3">{{ noti.updated|timesince}} ago</small>
+                            </div>
+                        </div>
+                <hr>
+
+
+                {% endif %}
+
+                <!-- Like message  -->
+
+                <!-- About book discussion room -->
+
+                {% if noti.notification_types == 4 %}
+
+                <h3 class="text-center">Hi  {{ noti.receiver|title }}</h3>
+                
+                        <div class="row mt-3 justify-content-center">
+                            <div class="sender_profile text-center col-md-5 col-sm-12">
+                                <a href="{% url 'myaccount:my-account' noti.sender.pk%}" class="profile_user">
+                                    <img class="sender_image" src="{{ noti.sender.profile_img.url}}" alt="{{ noti.sender}}">
+                                    <small class="lead">@{{ noti.sender.username}}</small>
+                                </a>
+                                <p class="message_text_noti">{{ noti.message_text}}</p>
+                            </div>
+                            <div class="message col-md-5 col-sm-12 ">
+                                <div class="text-center">
+                                    {% if noti.book.image %}
+                                    <img class="book_image" src="{{ noti.book.image.url }}" alt="{{ noti.book.name}}">
+                                    {% endif %}
+                                </div>
+                                <p class="noti_message text-center">"{{ noti.book.name }}" discussion yag'niy oz-ara pikir almasiw ushin oz qizigiwlishin bildirdi!!</p>
+                                <small class="ms-3">{{ noti.updated|timesince}} ago</small>
+                            </div>
+                        </div>
+                <hr>
+
+
+                {% endif %}
+
+                {% if noti.notification_types == 5 %}
+                        
+                    
+                        <div class="row mt-3 justify-content-center">
+                            <div class="sender_profile text-center col-md-5 col-sm-12">
+                                {% if noti.book.image %}
+                                    <img class="book_image" src="{{ noti.book.image.url }}" alt="{{ noti.book.name}}">
+                                {% endif %}
+                                
+                                <p class="noti_message text-center">"{{ noti.book.name }}" discussion yag'niy oz-ara pikir almasiw ushin kitap!!</p>
+                                <small class="ms-3">{{ noti.updated|timesince}} ago</small>
+                            </div>
+                            <div class="message col-md-5 col-sm-12 ">
+                                <div class="text-center font-monospace">
+                                    {{ noti.message_text }}
+                                </div>
+                                <div class="mt-2 font-monospace text-center" id="message_error">
+                                
+                                </div>
+                                <div class="form mt-4">
+                                    <input data-book_name="{{ noti.book.name }}" id="time" type="time" class="form-control" placeholder="Time....">
+                                    <input id="date" type="date" class="form-control mt-2" placeholder="Date....">
+                                    {% if count == 0 %}
+                                        <button id="btn_save" class="btn btn-outline-success mt-2" type="submit">Save</button>
+                                    {% else %}
+                                        <button id="btn_save_disabled" class="btn btn-outline-success mt-2" type="submit">Save</button>
+                                    {% endif %}
+
+                                    <div id="messaage" class="d-none font-monospace">
+                                            Please, right now you can't add time because of we have discussion room to Home page when timer out so you able to add time!!
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                   
+
+
+                {% endif %}
+
+
+
+
+                {% empty %}
+                <div class="display-5 text-center text-info">
+                    No notification yet...
+                </div>
+                
+
+            {% endfor %}
+
+
+            
+     
+        </div>
+    </div>
+
+   
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+   
+   
+   
+    <!-- Accept and Cancel -->
+    <script>
+
+        const accept = document.getElementById('accept')
+        const cancel = document.getElementById('cancel')
+        const add_hidden = document.getElementById('add-hidden')
+        const input = document.getElementById('input')
+        const input2 = document.getElementById('input2')
+
+        if (accept){
+            accept.addEventListener('click', (e)=>{
+            const data = {receiver: input.value, sender: input2.value}
+
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'accept' %}",
+                data: data,
+                timeout: 5000,
+                success: function(data){
+                   
+                },
+                error: function(data){
+            
+                }
+            })
+            add_hidden.classList.add('hidden')
+        })
+        }
+        
+        
+        if (cancel){
+            cancel.addEventListener('click', (e)=>{
+            const data = {receiver: input.value, sender: input2.value}
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'cancel' %}",
+                data: data,
+                timeout: 5000,
+                success: function(data){
+                    // console.log(data)
+                },
+                error: function(data){
+
+                }
+            })
+
+            add_hidden.classList.add('hidden')
+
+        })
+        }
+
+
+        const btn_save = document.getElementById('btn_save')
+        const message = document.getElementById('message_error')
+
+        if (btn_save){
+            btn_save.addEventListener('click', (e)=>{
+                const time = document.getElementById('time').value
+                const date = document.getElementById('date').value
+                const book_name = document.getElementById('time').getAttribute('data-book_name')
+
+                
+                
+
+                if (date !== '' && time !==''){
+                    message.textContent = 'Successfully saved!'
+                    message.style.backgroundColor = 'green'
+                    message.style.borderRadius = '7px'
+                    message.style.color = 'white'
+
+                    setTimeout(()=>{
+                        message.textContent = ''
+                    }, 3000)
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{% url 'chat:start-discuss'%}",
+                        data: {
+                            'book_name': book_name,
+                            'time': time,
+                            'date': date
+                        },
+                        success: function(success){
+                            console.log(success)
+                        },
+                        error: function(error){
+                            console.log(error)
+                        }
+                    })
+
+
+
+
+
+
+
+
+                } else if (date === '' && time === ''){
+                    message.textContent = 'You can\'t save without time and date!'
+                    message.style.backgroundColor = 'red'
+                    message.style.borderRadius = '7px'
+                    message.style.color = 'white'
+
+                    setTimeout(()=>{
+                        message.textContent = ''
+                    }, 3000)
+                } else if (time === ''){
+                    message.textContent = 'You can\'t save without time!'
+                    message.style.backgroundColor = 'red'
+                    message.style.borderRadius = '7px'
+                    message.style.color = 'white'
+
+                    setTimeout(()=>{
+                        message.textContent = ''
+                    }, 3000)
+                }else if (date === ''){
+                    message.textContent = 'You can\'t save without date!'
+                    message.style.backgroundColor = 'red'
+                    message.style.borderRadius = '7px'
+                    message.style.color = 'white'
+
+                    setTimeout(()=>{
+                        message.textContent = ''
+                    }, 3000)
+                }
+            })
+        }
+        
+        
+        // Disable btn
+        const btn_save_disabled = document.getElementById('btn_save_disabled')
+
+        if (btn_save_disabled){
+            btn_save_disabled.addEventListener('click', (e)=>{
+                document.getElementById('messaage').classList.remove('d-none')
+
+                setTimeout(()=>{
+                    document.getElementById('messaage').classList.add('d-none')
+                }, 5000)
+            })
+        }
+
+
+
+    
+
+
+    </script>
+
+    
+
+
+{% endblock content %}

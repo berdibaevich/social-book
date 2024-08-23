@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+
+
+
+
+
+{% block content %}
+
+<style>
+    ul{
+        display: none;
+    }
+    .helptext{
+        display: none;
+    }
+    .give_margin{
+        margin-top: 100px;
+    }
+
+</style>
+
+
+    {% if page == 'signup'%}
+    <div class="mt-5 row justify-content-center">
+        <div class="col-md-7 card shadow p-3">
+            <h3 class="text-center mb-4">Dizimnen o'tiw <i class="fa-regular fa-id-card fs-2 text-primary"></i></h3>
+            <form action="" method="post">{% csrf_token %}
+                {{ form.as_p }}
+
+                {% for field in form %}
+                    {% for error in field.errors%}
+                        <p class="text-danger lead">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+
+                <button type="submit" class="btn btn-outline-success">Register</button>
+            </form>
+            <p class="lead mt-3">
+                A'lleqashan dizimnen o'tkensizbe? <a href="{% url 'account:login'%}">Login</a>
+            </p>
+        </div>
+    </div>
+
+    {% else %}
+
+        <div class="mt-5 row justify-content-center">
+            <div class="col-md-7 card shadow p-3">
+                <h3 class="text-center mb-4">Login... <i class="fa-regular fa-id-card fs-2 text-primary"></i></h3>
+                <form action="" method="post">{% csrf_token %}
+                    <div class="mb-3">
+                        <input type="email" class="form-control" name="email" placeholder="Email...">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control"  name="password" placeholder="Password...">
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-success">Login</button>
+                </form>
+                <p class="lead mt-3">
+                    Dizimnen otpegen bolsan'iz? <a href="{% url 'account:register'%}">Dizimnen o'tiw</a>
+                </p>
+            </div>
+        </div>
+
+    {% endif %}
+
+
+    <div class="give_margin"></div>
+
+{% endblock content %}

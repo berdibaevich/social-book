@@ -1,0 +1,519 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<!-- styles -->
+
+<style>
+    .book_of_owner_image{
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+    }
+    .profile{
+        text-decoration: none;
+        color: #007185;
+        font-size: 13px;
+        font-weight: 700;
+    }
+    .profile:hover{
+        color: #c7511f;
+    }
+    .book_of_name{
+        color: #007185;
+    }
+    .book_of_name:hover{
+        color: #c7511f;
+    }
+    .book_of_footer{
+        color: #007185;
+    }
+
+    .time-book{
+        font-size: 12px;
+        color: #0f1111;
+        font-weight: 600;
+    }
+    .active_users{
+        font-size: 16px;
+        font-weight: 700;
+        color: #565959;
+    }
+    .icons{
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .rating-img{
+        width: 150px;
+    }
+    .rating-img_2{
+        width: 100px;
+    }
+
+    .dropdown_btn{
+        border: none;
+        background-color: inherit;
+    }
+
+    .global_rating{
+        color: #007185;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .menu{
+        width: 300px;
+    }
+    .parent_back{
+        border: 1px solid #007185;
+        width: 100%;
+        margin: 0 10px;
+        border-radius: 5px;
+    }
+    .child_back{
+        background-color: yellow;
+        color: yellow;
+    }
+    .give_me_margin{
+        margin-bottom: 100px;
+    }
+
+    .questions_book{
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    .roobot{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+       
+    }
+    .roobot_back{
+        background-color: antiquewhite;
+        padding: 7px;
+        border-radius: 10px;
+    }
+    .text_robot{
+        font-size: 12px;
+        font-weight: 700;
+
+    }
+    .question_question_max_h{
+        max-height: 300px;
+    }
+    .discuss_book{
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 9px;
+    }
+    .yeaaaa{
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-family: sans-serif;
+        color: #007185;
+    }
+
+    
+
+    .start_discuss_book_image{
+       
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 2px solid #c7511f;
+    }
+    
+ 
+    
+</style>
+
+
+<!-- Start discussion room -->
+    {% if discusss %}
+    <div class="row mt-2 mb-2">
+        <div class="col-md-12 card p-2">
+            <h3 class="text-center font-monospace">Discussion Room</h3>
+            <div class="row">
+                <div class="col-md-10 text-center">
+                    {% if discusss.book.image %}
+                        <img class="start_discuss_book_image" src="{{ discusss.book.image.url }}" alt="{{ discusss.book.name }}">
+                    
+                    {% endif %}
+                    <span class="font-monospace">{{ discusss.book.name }}</span>
+                    <a href="{% url 'chat:room' discusss.book.name %}" class="btn btn-outline-success">Check out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+<!-- /// -->
+
+<!-- Starting time for discussion book -->
+    {% if discuss %}
+        <div class="row mt-2 mb-3">
+            
+
+                {% if discuss.is_start %}
+
+
+
+                {% else %}
+                    <!-- tomende discuss.when|json_script:"timestamp" yagniy timestamp ozgeriwshini javascripke otedi -->
+                    {{ discuss.when|json_script:'timestamp'}}
+
+                  
+                        <div class="card shadow mb-2 col-md-12 p-2">
+                            <h2 class="text-center font-monospace">We are starting soon!</h2>
+                            <div id="show_time" class="text-center d-flex justify-content-around">
+                                <div class="yeaaaa">
+                                    <small id="DAY" class="text-black"></small>
+                                    <p >day</p>
+                                </div>
+                                <div class="yeaaaa">
+                                    <small id="HOUR" class="text-black"></small>
+                                    <p>hour</p>
+                                </div>
+                                <div class="yeaaaa">
+                                    <small id="MINUTE" class="text-black"></small>
+                                    <p>minute</p>
+                                </div>
+                                <div class="yeaaaa">
+                                    <small id="SECOND" class="text-black"></small>
+                                    <p class="yeaaaa">second</p>
+                                </div>
+                                
+                                <!-- <small id="BookName" data-book-name="{{ discuss.book.name }}"  class="d-none">{{ discuss.when|timeuntil}}</small> -->
+                                <small id="BookName"  class="d-none">{{ discuss.book.name }}</small>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 text-center">
+                                    <img class="discuss_book" src="{{ discuss.book.image.url}}" alt="{{ discuss.book.name}}">
+                                    <p   class="text-muted font-monospace">{{ discuss.book.name }}</p>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <h4 class="active_users">Tomende discussion qatnasiwshilari!</h4>
+                                    <div class="d-flex justify-content-center">
+                                        {% for user in discuss.discussion_users.all%}
+                                            <div class="me-3">
+                                                <img class="book_of_owner_image" src="{{ user.profile_img.url }}" alt="{{ user.username}}">
+                                                <p class="profile">@{{ user.username}}</p>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+          
+        </div>
+
+    {% endif %}
+
+<!-- / -->
+
+
+<!-- / styles -->
+
+    <!-- for tags small screen -->
+        <div class="d-sm-block d-md-none ms-4">
+            <a href="{% url 'home' %}?q=all" class="profile pe-3">
+                All Books
+            </a>
+            {% for tag in tags %}
+                <a href="{% url 'home' %}?q={{ tag.title }}" class="profile pe-3">{{ tag.title }} <span class="badge bg-primary">{{ tag.nums_of_book }}</span></a>
+            {% endfor %}
+        </div>
+
+    <!-- // small screen -->
+
+    <div class="row mt-3">
+        <div class="col-md-3">
+            {% include 'all_books.html'%}
+        </div>
+        <div class="col-sm-8 col-md-7">
+
+            {% include 'feed_books.html'%}
+
+            
+            <div class="justify-content-center mt-5">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if books.has_previous %}
+                      <li class="page-item"><a class="page-link" href="{% url 'home'%}?page={{books.previous_page_number}}">Previous</a></li>
+                      {% endif %}
+                      <li class="page-item"><a class="page-link" >Page {{ books.number }} of {{ books.paginator.num_pages }}</a>{{ pages }}</li>
+                     
+                      {% if books.has_next %}
+                      <li class="page-item"><a class="page-link" href="{% url 'home'%}?page={{books.next_page_number}}">Next</a></li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-sm-4 ">
+            {% include 'active_users.html'%}
+
+
+            <!-- RoBoT Process -->
+            <div class="position-sticky mt-3  d-sm-none d-md-block">
+                <a href="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+                    <img class="questions_book position-relative" src="{% static 'questions.webp'%}" alt="about">
+                    <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger fs-6">
+                        {{ count }}
+                    </span>
+                </a>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title font-monospace text-center" id="offcanvasRightLabel" >{% if message.welcome %} {{ message.welcome }} {% else %} My Social Book {% endif %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body text-bg-light ">
+                    {% if robot == None%}
+                        <div class="roobot_back mb-2">
+                            <img class="roobot" src="{% static 'robot.jpg'%}" alt="robot">
+                            <span class="text-muted font-monospace text_robot">{{ message.robot }}. {{ message.help }}!!</span>
+                        </div>
+                        <div class="roobot_back">
+                            <img class="roobot" src="{% static 'robot.jpg'%}" alt="robot">
+                            <span class="text-muted font-monospace text_robot">{{ message.ask }}</span>
+                            
+                        </div>
+                        <div>
+                            <div class="" id="close_yes_no">
+                                <p class="btn btn-outline-success mt-2" id="yes_btn">Yes</p>
+                                <p class="btn btn-outline-danger mt-2" id="no_btn">No</p>
+                            </div>
+                            <!-- login -->
+                            <div class="">
+                                <div id="message_login" class="">
+                                </div>
+                                <a href="{% url 'account:login'%}" class="d-none btn btn-success mt-2" id="login_page">Login</a>
+                                <a href="{% url 'account:register'%}" class="d-none btn btn-primary mt-2" id="create_account_btn">Create an account</a>
+                            </div>
+                        </div>
+                        
+                    {% endif %}
+                    {% if robot == False %}
+                        <div class="roobot_back mb-2">
+                            <img class="roobot" src="{% static 'robot.jpg'%}" alt="robot">
+                            <span class="text-muted font-monospace text_robot">HI {{ request.user.username }}! Are you looking for a book?<br> Do you wanna ask question?</span>
+                        </div>
+                        <div>
+                            <form action="{% url 'question:question'%}" method="post">
+                                {% csrf_token %}
+                                <input type="text" class="form-control" placeholder="What kind of book are you looking for?" name="question">
+                                <button type="submit" class="mt-2 btn btn-success">Send</button>
+                            </form>
+                        </div>
+                        {% if questions %}
+                        <div>
+                            <div class="roobot_back mb-2 mt-2">
+                                <img class="roobot" src="{% static 'robot.jpg'%}" alt="robot">
+                                <span class="text-muted font-monospace text_robot">{{ message.question}}</span>
+                            </div>
+                            <div class="overflow-auto question_question_max_h">
+                                {% for question in questions %}
+
+                                <img class="roobot" src="{{ question.user.profile_img.url }}" alt="robot">
+                                <span class="profile">@{{ question.user.username }}</span>
+                                <small class="font-monospace ms-3">{{ question.created|timesince}} ago</small>
+                                <p class="text-muted font-monospace">
+                                    {{ question.question }}
+                                </p>
+                                <p onclick="AnswerToggleFunc('{{question.pk}}')" class="font-monospace btn btn-outline-dark">Answer</p>
+                                <!-- answer form -->
+                                <div class="d-none" id="{{ question.pk }}">
+                                    <form action="{% url 'question:answer'%}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="question" value="{{ question.pk }}">
+                                        <input type="text" name="answer" placeholder="Answer this question...." class="form-control">
+                                        <button class="btn btn-success mt-2">Answer</button>
+                                    </form>
+                                </div>
+                                <hr>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        {% endif %}
+
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div>
+    
+
+    <div class="give_me_margin"></div>
+
+
+
+    <script>
+        const yes_button = document.getElementById('yes_btn')
+        const no_button = document.getElementById('no_btn')
+        const close_yes_no_button = document.getElementById('close_yes_no')
+
+        const create_account_btn = document.getElementById('create_account_btn')
+        // Yes button this page show us login url
+        if (yes_button){
+            yes_button.addEventListener('click', (e)=>{
+            const message = `
+                        <div class="roobot_back mt-2">
+                            <img class="roobot" src="{% static 'robot.jpg'%}" alt="robot">
+                            <span class="text-muted font-monospace text_robot">Please login here....!!</span>
+                            
+                        </div>
+            `
+            document.getElementById('message_login').innerHTML += message
+            
+            document.getElementById('login_page').classList.remove('d-none')
+            
+
+            setTimeout(() =>{
+                document.getElementById('message_login').innerHTML = ''
+            }, 5000)
+
+            close_yes_no_button.classList.add('d-none')
+        })
+        }
+        
+
+
+        // No button this page shows us to signup url 
+        if (no_button){
+            no_button.addEventListener('click', (e)=>{
+            const message = `
+                        <div class="roobot_back mt-2">
+                            <img class="roobot" src="{% static 'robot.jpg'%}" alt="robot">
+                            <span class="text-muted font-monospace text_robot">Sign up here...</span>
+                            
+                        </div>
+            `
+            document.getElementById('message_login').innerHTML += message
+            
+            create_account_btn.classList.remove('d-none')
+
+            setTimeout(() =>{
+                document.getElementById('message_login').innerHTML = ''
+            }, 5000)
+
+            close_yes_no_button.classList.add('d-none')
+
+            
+
+        })
+        }
+
+        // create
+
+
+        // answer
+        function AnswerToggleFunc(question_pk){
+            const row = document.getElementById(question_pk)
+            if (row.classList.contains('d-none')){
+                row.classList.remove('d-none')
+            }else{
+                row.classList.add('d-none')
+        }
+        }
+
+       
+
+        
+
+        
+        
+        // Tomendegi discussion time
+       
+        const get_time = document.getElementById('timestamp')
+        
+
+        if (get_time){
+            const x = setInterval(()=>{
+            const timestamp = JSON.parse(document.getElementById('timestamp').textContent)
+            const StartDate = new Date(timestamp).getTime()
+            const nowTime = new Date().getTime()
+            const timeSpan = StartDate - nowTime;
+
+            // tomende bul qaysi obj waqti tawsilganlardi push qiladi
+            // const BookName = document.querySelectorAll('#BookName')
+            // const BookNames = []
+            // BookName.forEach((obj)=>{
+            //     if (obj.textContent.includes('0')){
+            //         BookNames.push(obj.getAttribute('data-book-name'))
+            //     }
+            // })
+            
+            
+            
+            if (timeSpan <= 0){
+                const book_name = document.getElementById('BookName').textContent
+                
+                $.ajax({
+                    url: "{% url 'chat:start-time'%}",
+                    data: {'book_name': book_name},
+                    type: 'GET',
+                    success: function(success){
+                        console.log(success)
+                    },
+                    error: function(error){
+                        console.log(error)
+                    }
+                })
+                
+                
+                clearInterval(x)
+                return
+            }
+
+
+            let days = Math.floor(timeSpan / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((timeSpan % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((timeSpan % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((timeSpan % (1000 * 60)) / 1000);
+
+            document.getElementById('DAY').innerText = days;
+            document.getElementById('HOUR').innerText = hours;
+            document.getElementById('MINUTE').innerText = minutes;
+            document.getElementById('SECOND').innerText = seconds;   
+
+            
+                
+            
+        }, 1000)
+
+        }
+
+                
+
+
+        
+        
+        
+        
+
+        
+
+       
+        
+
+        
+     
+
+
+
+    </script>
+{% endblock content %}

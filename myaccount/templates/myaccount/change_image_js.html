@@ -1,0 +1,96 @@
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+<script>
+    const image_box = document.getElementById('image-box')
+    const openBTN = document.getElementById('open-btn')
+    const open_modal = document.getElementById('open-modal')
+    const closeBtn = document.getElementById('close-btn')
+    const add_hidden = document.getElementById('add_hidden')
+
+    const confirmBtn = document.getElementById('confirm')
+
+    const imageForm = document.getElementById('image-form')
+
+
+
+    // image process
+    const showImage = document.getElementById('get_image')
+    const csrf = document.getElementsByName('csrfmiddlewaretoken')
+    const input = document.getElementById('id_profile_img')
+
+    input.addEventListener('change', ()=>{
+      const img_data = input.files[0]
+      const url = URL.createObjectURL(img_data)
+      showImage.innerHTML = `<img src="${url}" id="account-image" width = "500px" alt="">`
+      confirmBtn.classList.remove('hidden')
+
+      var $image = $('#account-image');
+  
+      $image.cropper({
+            aspectRatio: 9 / 9,
+            crop: function(event) {
+              // console.log(event.detail.x);
+              // console.log(event.detail.y);
+              // console.log(event.detail.width);
+              // console.log(event.detail.height);
+              // console.log(event.detail.rotate);
+              // console.log(event.detail.scaleX);
+              // console.log(event.detail.scaleY);
+            }
+      });
+      
+      // Get the Cropper.js instance after initialized
+      var cropper = $image.data('cropper');
+
+      confirmBtn.addEventListener('click', ()=>{
+        cropper.getCroppedCanvas().toBlob((blob)=>{
+          const fd = new FormData()
+          fd.append('csrfmiddlewaretoken', csrf[0].value)
+          fd.append('profile_img', blob, 'my-image.png')
+
+          $.ajax({
+            type: 'POST',
+            url: imageForm.action,
+            enctype: 'multipart/form-data',
+            data: fd,
+            success: function(response){
+              console.log(response)
+            },
+            error: function(error){
+              console.log(error)
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+          })
+        })
+      })
+        
+    })
+
+
+  if (openBTN){
+      openBTN.addEventListener('click', (e)=>{
+          image_box.classList.add('hidden')
+          open_modal.classList.remove('hidden')
+      })
+  }
+
+    
+
+    closeBtn.addEventListener('click', (e)=>{
+      image_box.classList.remove('hidden')
+      open_modal.classList.add('hidden')
+    })
+
+
+
+
+
+
+
+
+    
+    
+    
+    </script>

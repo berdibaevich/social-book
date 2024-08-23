@@ -1,0 +1,648 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .container_detail{
+        margin-bottom: 200px;
+    }
+    .book_subtitle{
+        font-size: 14px;
+        color: #565959;
+    }
+    .author_of_book{
+        font-size: 16px;
+        font-weight: 700;
+        color: #007185;
+    }
+    .toliq_oqiw{
+        font-weight: 700;
+        color: #007185;
+        cursor: pointer;
+    }
+
+    .book_detail_image{
+        width: 300px;
+        height: 400px;
+    }
+    .icons-detail{
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .rating_about_style{
+        font-size: 16px;
+        font-weight: 700;
+        color: #565959;
+    }
+    .btn_star{
+        border: none;
+        background-color: inherit;
+    }
+
+    .checked{
+        color: yellow;
+    }
+    .recommend{
+        font-size: 10px;
+        font-weight: 700;
+        color: #007185;
+        margin-top: 5px;
+    }
+
+    /* for slider */
+    #featured{
+        max-width: 300px;
+        max-height: 150px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid #007185;
+        border-radius: 7px;
+        padding: 10px;
+    }
+
+    .thumbnail_slider{
+        object-fit: cover;
+        max-width: 100px;
+        max-height: 70px;
+        cursor: pointer;
+        opacity: 0.5;
+        margin: 5px;
+        border: 1px solid #007185;
+        border-radius: 4px;
+    }
+
+    .thumbnail_slider:hover{
+        opacity: 1;
+    }
+    .active_slider{
+        opacity: 1;
+    }
+    #slide-wrapper{
+        max-width: 300px;
+        display: flex;
+        min-height: 100px;
+        align-items: center;
+    }
+
+    .first_book_name{
+        font-size: 16px;
+        font-weight: 700;
+        color: #007185;
+    }
+    .book_feedback{
+        font-size: 12px;
+        font-weight: 700;
+        color: #565959;
+    }
+
+    .tanisip_shigiw{
+        color: #007185;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .tanisip_shigiw:hover{
+        color: #c7511f;
+    }
+
+    /* /slider */
+    .book_owner_profile{
+        width: 100px;
+        height: 100px;
+        border-radius: 20px;
+        
+    }
+    .book_owner_profile_a{
+        text-decoration: none;
+        color: #007185;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .comment_images{
+        width:300px;
+        height: 500px;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+    .comment_user_profile_image{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    .comment_user_full_name{
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #007185;
+    }
+    .comment_user_full_name:hover{
+        color: #c7511f;
+    }
+    .comment_time{
+        margin-left: 13px;
+        font-size: 10px;
+        color: #565959;
+        font-weight: 700;
+    }
+    .comments_people{
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .icons_for_comment_like{
+        color: #007185;
+        margin-right: 10px;
+    }
+    .icons_for_comment_like:hover{
+        color: #565959;
+    }
+    .reply_to_comment{
+        font-size: 13px;
+        font-weight: 600;
+        color: #007185;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .reply_to_comment:hover{
+        color: #565959;
+    }
+    .comment_counter{
+        margin-right: 10px;
+        font-size: 14px;
+    }
+    .reply_to_comment2{
+        cursor: pointer;
+    }
+
+    .replies_to_comment_style{
+        border: none;
+        width: inherit;
+    }
+    .replies_text{
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+    .replies_dropdown_menu{
+        width: 400px;
+        max-height: 300px;
+        overflow: auto;
+    }
+
+</style>
+
+
+<div class="container_detail">
+    <div class="row mt-2">
+        <div class="col-md-12 col-sm-12 card p-2">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <img src="{{ book.image.url}}" class="rounded book_detail_image" alt="{{ book.name}}">
+                    <div class="d-flex justify-content-center mt-3">
+                        <div class=" icons-detail ms-4">
+                            {% if is_liked %}
+                                <a href="{% url 'likeordislike:like' request.user book.name %}" class="toliq_oqiw me-3 is_liked"><i class="fa-solid fa-thumbs-up fs-3"></i></a>
+                                <p class="icons-detail">{% if book.get_like_counter <= 1 %}like {% else %}likes{% endif %} {{ book.get_like_counter }}</p>
+                            {% else %}
+                                <a href="{% url 'likeordislike:like' request.user book.name %}" class="toliq_oqiw me-3 is_liked"><i class="fa-regular fa-thumbs-up fs-3"></i></a>
+                                <p class="icons-detail">{% if book.get_like_counter <= 1 %}like {% else %}likes{% endif %} {{ book.get_like_counter }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="icons-detail ms-4">
+                            {% if is_disliked %}
+                                <a href="{% url 'likeordislike:dislike' request.user book.name %}" class="toliq_oqiw me-3"><i class="fa-solid fa-thumbs-down fs-3"></i></a>
+                                <p class="icons-detail">dislike</p>
+                            {% else %}
+                                <a href="{% url 'likeordislike:dislike' request.user book.name %}" class="toliq_oqiw me-3"><i class="fa-regular fa-thumbs-down fs-3"></i></a>
+                                <p class="icons-detail">dislike</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mt-2 d-md-block  float-center mb-3">
+                        <a class="book_owner_profile_a" href="{% url 'myaccount:my-account' book.owner.pk %}"><img class="book_owner_profile" src="{{ book.owner.profile_img.url}}" alt="">
+                            @{{ book.owner }}
+                        </a><br><br>
+                        {% if request.user == book.owner %}
+                        <a href="{% url 'book:update' book.name %}" class="btn btn-outline-success">Update book</a>
+                        <a href="{% url 'book:delete' book.name %}" class="btn btn-outline-danger">Delete book</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center mt-3">Qisqasha mazmuni</h5>
+                    <p class="book_subtitle"> {{book.subtitle|truncatewords:20}} {% if book.subtitle|length > 70 %} <span data-subtitle="{{ book.subtitle }}" class="toliq_oqiw"  data-bs-toggle="modal" data-bs-target="#more">Toliq oqiw</span>{% endif %} </p>
+                    <!-- Toliq oqiw ushin Modal -->
+                    <div class="modal fade" id="more" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+                                    {{ book.subtitle}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- / Toliq oqiw ushin modal -->
+                
+    
+    
+                    
+                    <h6 class="author_of_book d-md-block d-sm-inline  me-sm-5">Author: {{ book.author }}</h6>
+                    <p class="author_of_book d-md-block d-sm-inline">Language: {{ book.language|title }}</p>
+    
+    
+                    
+                    <!-- rating star -->
+                
+                {% if request.user.is_authenticated %}
+                    {% if is_rating %}
+                            <div class="text-center">
+                                <h3 class="lead rating_about_style text-center mt-sm-4">Usi Kitap haqida bergen bahan'iz!</h3>
+                                {% if score == 1 %}
+                                <img src="{% static '1-star.png' %}"  alt="{{ book.name }}">
+                                {% endif %}
+                                {% if score == 2 %}
+                                    <img src="{% static '2-star.png' %}" alt="{{ book.name }}">
+                                {% endif %}
+                                {% if score == 3 %}
+                                    <img src="{% static '3-star.png' %}"  alt="{{ book.name }}">
+                                {% endif %}
+                                {% if score == 4 %}
+                                    <img src="{% static '4-star.png' %}" alt="{{ book.name }}">
+                                {% endif %}
+                                {% if score == 5 %}
+                                    <img src="{% static '5-star.png' %}" alt="{{ book.name }}">
+                                {% endif %}
+                            </div>
+                        
+    
+                    {% else %}
+                    <div>
+                        <h3 class="lead rating_about_style text-center mt-sm-4">Qisqasha mazmuni haqida bahan'iz qanday?</h3>
+                        <form action="" method="post" class="text-center" id="form-rating" >
+                            {% csrf_token %}
+                            <button type="submit" id="rating" data-book_name="{{book.name}}" data-score="1" class="fa-solid fa-star fs-2 btn_star"></button>
+                            <button type="submit" id="rating" data-book_name="{{book.name}}" data-score="2" class="fa-solid fa-star fs-2 btn_star"></button>
+                            <button type="submit" id="rating" data-book_name="{{book.name}}" data-score="3" class="fa-solid fa-star fs-2 btn_star"></button>
+                            <button type="submit" id="rating" data-book_name="{{book.name}}" data-score="4" class="fa-solid fa-star fs-2 btn_star"></button>
+                            <button type="submit" id="rating" data-book_name="{{book.name}}" data-score="5" class="fa-solid fa-star fs-2 btn_star"></button>
+                        </form>
+    
+                       <p id="message" class="text-center mt-3 author_of_book"></p>
+                    </div>
+                    {% endif %}
+    
+    
+                {% endif %}
+                    
+                    
+                    <!-- / rating star -->
+                    <!-- about book -->
+                    
+                    <table class="table">
+                        <tbody>
+                            <tr class="table-primary ">
+                                <th ><span class="fs-5">📖</span> Oqip atirman</th>
+                                <th><a href="{% url 'aboutbook:reading' request.user  book.name %}"><i class="fa-solid fa-check fs-5"></i></a></th>
+                                <th><span class="text-dark fs-5 ">{{ book.get_reading_count }}</span></th>
+                            </tr>
+                            <tr class="table-success ">
+                                <th ><span class="fs-5">📔</span> Oqip boldim</th>
+                                <th><a href="{% url 'aboutbook:readed' request.user  book.name %}"><i class="fa-solid fa-check fs-5"></i></a></th>
+                                <th><span class="text-dark fs-5 ">{{ book.get_readed }}</span></th>
+                            </tr>
+                            <tr class="table-danger ">
+                                <th ><span class="fs-5">📚</span> Endi oqiyman</th>
+                                <th><a href="{% url 'aboutbook:will_read' request.user  book.name %}"><i class="fa-solid fa-check fs-5"></i></a></th>
+                                <th><span class="text-dark fs-5 ">{{ book.get_willread }}</span></th>
+                            </tr>
+                            <tr class="table-light ">
+                                <th ><span class="fs-5 text-info">📧</span> Pikir almasiw</th>
+                                <th><a href="{% url 'aboutbook:discuss' request.user  book.name %}"><i class="fa-solid fa-check fs-5"></i></a></th>
+                                <th><span class="text-dark fs-5 ">{{ book.get_discuss }}</span></th>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                    <!-- Recommend books -->
+                    {% if recommend_books %}
+                        <h5 class="mt-3 mb-3 text-center text-muted font-monospace">Ma'slahat beriletug'in kitaplar</h5>
+                        
+                        <div class="d-flex justify-content-around">
+                            <img id="featured" src="{{ first_book.image.url }}" alt="{{first_book.name}}">
+                            <div class="ms-3">
+                                <h4 id="first_book_name" class="first_book_name text-center">{{ first_book.name }}</h4>
+                                <hr>
+                                <small class="book_feedback" id="book_feedback">{{ first_book.feedback }}</small><br>
+                                <a href="{% url 'book:detail' first_book.pk%}" id="address" class="tanisip_shigiw">Toliq tanisip shig'iw</a>
+                            </div>
+                        </div>
+                        <div id="slide-wrapper">
+                            <div id="slider">
+                                {% for recommend in recommend_books %}
+                                <img class="thumbnail_slider" src="{{recommend.image.url}}" alt="{{recommend.name}}"
+                                data-pk="{{ recommend.pk }}"
+                                data-name="{{ recommend.name }}"
+                                data-feedback="{{ recommend.feedback}}">
+                                {% endfor %}
+                            </div>
+                        </div>
+    
+                    {% endif %}
+                    <!--///  Yea -->
+
+    
+                </div>
+            </div>
+        </div>
+        <!-- Comment section  -->
+        <div class="col-md-4 mt-2 text-center d-md-block d-none">
+            <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active" data-bs-interval="5000">
+                    <img src="{% static 'comment-1.jpg'%}" class="d-block w-100 comment_images" alt="comment-1">
+                  </div>
+                  <div class="carousel-item" data-bs-interval="2000">
+                    <img src="{% static 'cartoon-little-boy-writing.jpg'%}" class="comment_images d-block w-100" alt="comment-2">
+                  </div>
+                  <div class="carousel-item">
+                    <img src="{% static 'cartoon-man-writing.jpg'%}" class="comment_images d-block w-100" alt="comment-1">
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="col-md-8  col-sm-12  card p-3 mt-2">
+            <h2 class="text-muted mb-3 font-monospace text-center">Comments {% if book.get_comment > 0%}({{ book.get_comment }}) {% endif %}</h2>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="user" value="{{ request.user }}" id="">
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-secondary">Comment</button>
+            </form>
+            <hr>
+            {% for comment in comments %}
+                {% if comment.is_parent %} 
+
+                    <a href="{% url 'myaccount:my-account' comment.user.pk %}" class="comment_user_full_name mb-2">
+                        <img class="comment_user_profile_image" src="{{ comment.user.profile_img.url }}" alt="{{ comment.user.username }}">
+                        {% if comment.user.myaccount.first_name and  comment.user.myaccount.last_name %}
+                        {{comment.user.myaccount.first_name}} {{ comment.user.myaccount.last_name }}
+                        {% else %}
+                        @{{comment.user.username}}
+                        {% endif %}
+                        <small class="comment_time">{{ comment.created|timesince}} ago</small>
+                    </a>
+                    
+                    
+                <p class="comments_people font-monospace">
+                    {{ comment.text }}
+                </p>
+               
+
+               
+                <small class="mb-2">
+                    <!-- like -->
+                    {% if request.user in  comment.get_liked_it %}
+                        <a class="icons_for_comment_like" href="{% url 'comment:like-comment' request.user book.name comment.text comment.user  %}"><i class="fa-solid fa-thumbs-up fs-6"></i></a>
+                    {% else %}
+                        <a class="icons_for_comment_like" href="{% url 'comment:like-comment' request.user book.name comment.text comment.user  %}"><i class="fa-regular fa-thumbs-up fs-6"></i></a>
+                    {% endif %}
+                    <small class="comment_counter me-4 me-3">{% if comment.get_comment_counter == 0 %} {% else %} {{ comment.get_comment_counter }} {% endif %}</small>
+                    <!-- dislike -->
+                    {% if request.user in  comment.get_dislike_it %}
+                        <a href="{% url 'comment:dislike-comment' request.user book.name comment.text comment.user %}" class="icons_for_comment_like"><i class="fa-solid fa-thumbs-down fs-6"></i></a>
+                    {% else %}
+                        <a href="{% url 'comment:dislike-comment' request.user book.name comment.text comment.user %}" class="icons_for_comment_like"><i class="fa-regular fa-thumbs-down fs-6"></i></a>
+                    {% endif %}
+                    <!-- reply -->
+                    {% if request.user.is_authenticated %}
+                        <a class="reply_to_comment " onclick="commentToggleReply('{{ comment.pk }}')" id="reply_to_btn">
+                            Reply
+                        </a>
+                        <div class="d-none" id="{{ comment.pk }}">
+                            <form action="{% url 'comment:reply' book.pk comment.pk%}" method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-success">Reply</button>
+                            </form>
+                        </div>
+                       
+                    {% else %}
+                        <small id="reply_to" class="reply_to_comment reply_to_comment2">Reply</small>
+                        <p class="text-danger font-monospace" id="reply_message"></p>
+    
+                    {% endif %}
+                      
+                </small>
+               
+                
+                <!-- Replies comment  -->
+                    {% if comment.get_children_count > 0 %}
+                    <div class="replies_text">
+                        <p class="reply_to_comment dropdown-toggle"  data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if comment.get_children_count == 1 %}{{ comment.get_children_count }} REPLY {% else %} {{comment.get_children_count}} REPLIES {% endif %}
+                        </p>
+                        <ul class="dropdown-menu p-3 replies_dropdown_menu">
+                            {% for reply in comment.children %}
+                                
+                                <a href="{% url 'myaccount:my-account' reply.user.pk %}" class="comment_user_full_name mb-2">
+                                    <img class="comment_user_profile_image" src="{{ reply.user.profile_img.url }}" alt="{{ reply.user.username }}">
+                                    {% if reply.user.myaccount.first_name and  reply.user.myaccount.last_name %}
+                                    {{reply.user.myaccount.first_name}} {{ reply.user.myaccount.last_name }}
+                                    {% else %}
+                                    @{{reply.user.username}}
+                                    {% endif %}
+                                    <small class="comment_time">{{ reply.created|timesince}} ago</small>
+                                </a>
+
+                                
+                                
+                            
+                                <p class="comments_people font-monospace mt-2 ms-4">
+                                    {{ reply.text }}
+                                </p>
+
+                                <!-- Likes and Dislike Btn -->
+                                <!-- like -->
+                                {% if request.user in  reply.get_liked_it %}
+                                <a class="icons_for_comment_like" href="{% url 'comment:like-comment' request.user book.name reply.text reply.user  %}"><i class="fa-solid fa-thumbs-up fs-6"></i></a>
+                                {% else %}
+                                    <a class="icons_for_comment_like" href="{% url 'comment:like-comment' request.user book.name reply.text reply.user  %}"><i class="fa-regular fa-thumbs-up fs-6"></i></a>
+                                {% endif %}
+                                <small class="comment_counter me-4 me-3">{% if reply.get_comment_counter == 0 %} {% else %} {{ reply.get_comment_counter }} {% endif %}</small>
+                                <!-- dislike -->
+                                {% if request.user in  reply.get_dislike_it %}
+                                    <a href="{% url 'comment:dislike-comment' request.user book.name reply.text reply.user %}" class="icons_for_comment_like"><i class="fa-solid fa-thumbs-down fs-6"></i></a>
+                                {% else %}
+                                    <a href="{% url 'comment:dislike-comment' request.user book.name reply.text reply.user %}" class="icons_for_comment_like"><i class="fa-regular fa-thumbs-down fs-6"></i></a>
+                                {% endif %}
+                                <hr>
+
+
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    {% endif %}
+
+                {% endif %}
+                    {% empty %}
+                    <p class="font-monospace">No comment yet....</p>
+                    
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="mt-5"></div>
+
+
+
+<!-- Rating javascript -->
+
+<script>
+    // for slider 
+    const thumbnail_slider = document.querySelectorAll('.thumbnail_slider')
+    const first_book_name = document.getElementById('first_book_name')
+    const book_feedback = document.getElementById('book_feedback')
+    const address = document.getElementById('address')
+   
+
+
+
+
+    thumbnail_slider.forEach((obj)=>{
+        obj.addEventListener('mouseover', (e)=>{
+            const data_pk = obj.getAttribute('data-pk')
+            const data_name = obj.getAttribute('data-name')
+            const data_feedback = obj.getAttribute('data-feedback')
+
+            obj.classList.toggle('active_slider')
+            obj.classList.toggle('active_slider')
+        
+            
+            first_book_name.textContent = data_name
+            book_feedback.textContent = data_feedback
+            address.setAttribute('href', `http://127.0.0.1:8000/book/${data_pk}`)
+            document.getElementById('featured').src = obj.src
+        })
+    })
+
+
+
+
+
+
+    // for rating javascript
+    const rating = document.querySelectorAll('#rating')
+    const form = document.getElementById('form-rating')
+    const csrf = document.getElementsByName('csrfmiddlewaretoken')   
+    const message = document.getElementById('message')
+
+    const reply_to = document.querySelectorAll('#reply_to')
+    const reply_message = document.getElementById('reply_message')
+
+
+// add color when user enter star
+    const  add_yellow =(size)=>{
+        const children = form.children
+        for (let i = 0; i < children.length; i++){
+            if (i <= size){
+                children[i].classList.add('checked')
+            }else{
+                children[i].classList.remove('checked')
+            }
+        }
+    }
+
+// 
+
+
+
+    rating.forEach((obj)=>{
+        obj.addEventListener('click', (e)=>{
+            e.preventDefault()
+            const book = obj.getAttribute('data-book_name')
+            const star = Number(obj.getAttribute('data-score'))
+
+            if (star === 5){
+                add_yellow(star)
+                
+            } else if (star === 4){
+                add_yellow(star)
+            }else if (star === 3){
+                add_yellow(star)
+            }else if (star === 2){
+                add_yellow(star)
+            }else if (star === 1){
+                add_yellow(star)
+            }
+
+            message.textContent = `Sizdin' bergen bahan'iz qabil qilindi!`
+            setTimeout(()=>{
+                message.textContent = ''
+            }, 3000)
+
+            const data = {
+                'csrfmiddlewaretoken': csrf[0].value,
+                'book': book,
+                'score': star
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'book:rating'%}",
+                data: data,
+                success: function(data){
+
+                },
+
+                error: function(error){
+                    
+                }
+            })
+
+        })
+    })
+
+    reply_to.forEach((obj)=>{
+        obj.addEventListener('click', (e)=>{
+            reply_message.textContent = 'Siz dizimnen yamasa loginnen otiwin\'izge tuwri keledi!'
+
+            setTimeout(()=>{
+                reply_message.textContent = ''
+            }, 3000)
+
+        })
+    })
+
+
+    // reply to comment
+   
+    
+    function commentToggleReply(parent_id){
+        const row = document.getElementById(`${parent_id}`)
+
+        if (row.classList.contains('d-none')){
+            row.classList.remove('d-none')
+        }else{
+            row.classList.add('d-none')
+        }
+
+    }
+    
+
+
+</script>
+
+<!-- / -->
+
+
+
+{% endblock content %}
